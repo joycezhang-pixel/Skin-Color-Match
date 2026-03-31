@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaGlow — Discover Your Seasonal Color Type</title>
+    <meta name="description" content="An intelligent tool to detect your skin color and map it to your ideal seasonal color palette (Spring, Summer, Autumn, Winter).">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+</head>
+<body class="dark-mode">
+    <div class="background-radial-glow"></div>
+    
+    <main class="app-container">
+        <header class="app-header">
+            <h1 class="glow-text">ChromaGlow</h1>
+            <p class="subtitle">AI-Powered Seasonal Color Analysis</p>
+        </header>
+
+        <section class="main-content">
+            <!-- Left Side: Camera/Capture Area -->
+            <div class="capture-section glass-panel">
+                <div class="video-container">
+                    <video id="camera-feed" autoplay playsinline></video>
+                    <canvas id="capture-canvas" style="display:none;"></canvas>
+                    
+                    <div class="camera-overlay">
+                        <div class="scan-reticle"></div>
+                        <div id="lighting-indicator" class="lighting-status good">
+                            <span class="status-dot"></span> Optimal Light
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls-bar">
+                    <button id="camera-btn" class="btn secondary-btn" aria-label="Toggle Camera">
+                        <span class="icon">📷</span> Start Camera
+                    </button>
+                    <button id="analyze-btn" class="btn primary-btn pulse" aria-label="Analyze Skin Color" disabled>
+                        <span class="icon">✨</span> Detect Color
+                    </button>
+                    <div class="file-upload-wrapper">
+                        <label for="image-upload" class="btn outline-btn" aria-label="Upload Image">
+                            <span class="icon">📁</span> Upload Image
+                            <input type="file" id="image-upload" accept="image/*" style="display:none;">
+                        </label>
+                    </div>
+                </div>
+                <p class="guidance-text">Position your face in the reticle. For best results, use natural daylight.</p>
+            </div>
+
+            <!-- Right Side: Results & Guidance -->
+            <div id="results-panel" class="results-section glass-panel initial-state">
+                <!-- Initial State Message -->
+                <div id="initial-message" class="state-message">
+                    <div class="message-icon">🔍</div>
+                    <h3>Waiting for Analysis</h3>
+                    <p>Start your camera or upload a photo to discover your color season and palette.</p>
+                </div>
+
+                <!-- Analysis Results (Hidden initially) -->
+                <div id="analysis-content" class="analysis-results" style="display:none;">
+                    <div class="detected-color-card">
+                        <div class="label">Detected Skin Tone</div>
+                        <div class="color-display-row">
+                            <div id="sampled-color-box" class="color-box"></div>
+                            <div class="color-codes">
+                                <span id="color-hex">#----</span>
+                                <span id="color-hsl">hsl(--, --%, --%)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="season-result-card">
+                        <div class="label">Your Type</div>
+                        <h2 id="mapped-season" class="season-title">----</h2>
+                        <p id="season-description" class="season-desc">---</p>
+                    </div>
+
+                    <div class="palette-container">
+                        <div class="label">Your Harmonic Palette</div>
+                        <div id="palette-grid" class="palette-grid">
+                            <!-- Palette items will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="app-footer">
+            <p>&copy; 2026 ChromaGlow. Built with ❤️ for aesthetic perfection.</p>
+        </footer>
+    </main>
+
+    <!-- JS Logic -->
+    <script src="app.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then(registration => {
+              console.log('SW registered:', registration.scope);
+            })
+            .catch(error => {
+              console.error('SW failed:', error);
+            });
+        });
+      }
+    </script>
+</body>
+</html>
